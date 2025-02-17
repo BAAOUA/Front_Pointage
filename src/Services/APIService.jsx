@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 const API = axios.create({
   baseURL: "http://localhost:8080",
@@ -47,8 +47,14 @@ API.interceptors.response.use(
     }; 
   },
   async (error) => {
+    //console.log("eeeee" , error.response?.status)
     if (error.response?.status === 500) {
       return Promise.reject(handleError(error))
+    }
+    if(error.response?.status ===403) {
+      //window.location = "/login"
+      window.history.back()
+      alert('Accès refusé - Vous n\'avez pas les droits nécessaires')
     }
 
     const originalRequest = error.config
@@ -97,14 +103,14 @@ API.interceptors.request.use(
     return request
   },
   async (error)=>{
-    console.log(error)
+    //console.log(error)
     return Promise.reject(handleError(error))
   }
 )
 
 const handleError = (error) => {
   if (error.response) {
-    console.log(error.response)
+    //console.log(error.response)
     return {
       success: false,
       status: error.response?.status,
@@ -118,7 +124,7 @@ const handleError = (error) => {
       code: 'NETWORK_ERROR',
     }
   } else {
-    console.log("erreur          ", error)
+    //console.log("erreur          ", error)
     return {
       success: false,
       message: 'Une erreur inconnue est survenue.',

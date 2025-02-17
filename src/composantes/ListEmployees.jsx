@@ -1,31 +1,48 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
-import { fetchEmployees, filtredEmployees, filtreParDate } from "../Store/employeeSlice"
+import { fetchEmployees, clearMessages } from "../store/employeeSlice"
 
 
 export default function ListEmployees(){
   const dispatch = useDispatch()
-  const {employees} = useSelector((state)=> state.employee)
+  const {employees, successMessage, erreurMessage} = useSelector((state)=> state.employee)
 
   
   useEffect(()=>{
     dispatch(fetchEmployees())
-  }, [])
+  }, [dispatch])
 
   const onDateChange = (e)=>{
-    const date = e.target.value
-    if (date.length === 10) {
-      dispatch(filtredEmployees(date))
+    const date = e.target.value   
+    if (date.length === 10 && new Date(date).getFullYear().toString().length === 4) {
+      dispatch(fetchEmployees(date))
     } else {
-      console.log("date   ", date)
+      //console.log("date   ", date)
     }
   }
+
+  useEffect(() => {
+    let timeoutId
+    if (successMessage || erreurMessage) {
+      timeoutId = setTimeout(() => {
+        dispatch(clearMessages())
+      }, 8000) // 8 secondes
+    }
+    return () => clearTimeout(timeoutId)
+  }, [dispatch, successMessage, erreurMessage])
+
   return(
     <div className="container">
+      {successMessage !== null &&
+        (<div className="row" style={{backgroundColor: "#d1ecf1", color: "#0c5460", maxWidth: "80%"}}>{successMessage}</div>)
+      }
+      {erreurMessage !== null &&
+        (<div className="row" style={{backgroundColor: "#f8d7da", color: "#721c24", maxWidth: "80%"}}>{erreurMessage}</div>)
+      }
       <div className="row">
         <h3>Liste des employées</h3>
         <input style={{width:"300px"}} className="input-text" type="date" id="search"
-          onBlur={(e)=>onDateChange(e)}
+          onChange={(e)=>onDateChange(e)}
           placeholder="Votre nom d'utilisateur"
         />
       </div>

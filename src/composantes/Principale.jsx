@@ -1,5 +1,5 @@
-import { Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router";
-import { POST } from "../Services/APIService";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { POST } from "../services/APIService";
 import { useEffect } from "react";
 
 export default function Principale(){

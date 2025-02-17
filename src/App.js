@@ -1,22 +1,20 @@
 import './App.css';
 import './composantes/styles.css'
 
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Principale from './composantes/Principale';
 import AddEmployees from './composantes/AddEmployees';
 import ListEmployees from './composantes/ListEmployees';
-import Login from './composantes/login';
+import Login from './composantes/Login';
 
 import { Provider } from 'react-redux';
-import store from './Store/store';
-import ProtectedRoute from './Services/ProtectedRoute';
-import { useEffect } from 'react';
+import store from './store/store';
+import ProtectedRoute from './services/ProtectedRoute';
 
 const route = createBrowserRouter([
   {
     path:"/",
     element: <Principale/>,
-    errorElement: <h1>page non trouver</h1>,
     children: [
       {
         path: "/ajouter",

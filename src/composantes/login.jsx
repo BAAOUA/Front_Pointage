@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
-import API, { POST } from "../Services/APIService"
-import { useNavigate } from "react-router"
+import { POST } from "../services/APIService"
+import { useNavigate } from "react-router-dom"
 
 export default function Login(){
   const navigate = useNavigate()
   const {register, handleSubmit, formState: {errors}} = useForm()
-  const onSubmit= async (data)=>{
+  const onSubmit = async (data)=>{
     const response = await POST("/auth/login", data)
     if(response.success){
       localStorage.setItem("accessToken", response.data.accessToken)
@@ -38,7 +38,7 @@ export default function Login(){
             <label htmlFor="password">Mot de passe</label>
             <input className="input-text" type="password" id="password" 
               placeholder="Votre mot de passe"
-              {...register("password", {required:"Vous devez saissir votre mot de passe", minLength: {value:4, message:"dffd"}, maxLength:12})}
+              {...register("password", {required:"Vous devez saissir votre mot de passe", minLength: {value:4, message:"Votre mot de passe est plus court"}, maxLength:12})}
             />
             <span style={{color: "red"}}>{errors.password?.message}</span>
           </div>                 
