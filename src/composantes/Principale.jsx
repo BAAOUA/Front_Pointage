@@ -14,7 +14,7 @@ export default function Principale(){
       alert("Une erreur s'est produite lors de la déconnexion.")
     }
   }
-  const location = useLocation();
+  const location = useLocation()
   useEffect(()=>{
     if (location.pathname === "/") {
       navigate("/affiche")

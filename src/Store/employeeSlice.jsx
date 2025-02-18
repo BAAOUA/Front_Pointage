@@ -45,9 +45,6 @@ const employeeSlice = createSlice({
             state.successMessage =null
           }
         })
-        .addCase(fetchEmployees.rejected, (state)=>{
-          console.log("rejected actions  ", state)
-        })
         .addCase(addEmployees.pending, (state)=>{
           state.success = false
         })
@@ -63,7 +60,7 @@ const employeeSlice = createSlice({
           }
         })
         .addCase(addEmployees.rejected, (state)=>{
-          console.log("rejected actions  ", state)
+          //console.log("rejected actions  ", state)
           state.success = false
         })
     }

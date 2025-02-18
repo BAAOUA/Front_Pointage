@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const API = axios.create({
   baseURL: "http://localhost:8080",
@@ -23,7 +22,7 @@ const GET = async (url)=> {
   try {
     const config = configure()
     const response = await API.get(url, config)
-    return response;
+    return response
   } catch (error) {
     return error
   }
@@ -33,7 +32,7 @@ const POST = async (url, data, isMultipartFile = false) => {
   try {
     const config = configure(isMultipartFile)
     const response = await API.post(url, data, config)
-    return response;
+    return response
   } catch (error) {
     return error
   }
@@ -44,7 +43,7 @@ API.interceptors.response.use(
     return {
       success: true, 
       data: response.data
-    }; 
+    }
   },
   async (error) => {
     //console.log("eeeee" , error.response?.status)
@@ -71,7 +70,7 @@ API.interceptors.response.use(
           window.location.href = "/login"
         }
         const response = await API.post('/auth/refresh-token', refreshToken)
-        const data = response.data;
+        const data = response.data
         console.log("repondse refresh token===========   ", data)
   
         localStorage.setItem('accessToken', data.accessToken)

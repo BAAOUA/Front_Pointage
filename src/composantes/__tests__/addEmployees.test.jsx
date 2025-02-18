@@ -7,6 +7,7 @@ import AddEmployees from "../AddEmployees"
 import { useDispatch, useSelector } from 'react-redux'
 import userEvent from '@testing-library/user-event'
 
+
 jest.mock('react-router-dom',()=>({
   useNavigate: jest.fn()
 }))
@@ -18,21 +19,15 @@ jest.mock('../../store/employeeSlice',()=>({
   addEmployees: jest.fn(),
   clearMessages: jest.fn()
 }))
-describe('Test de la page AddEmployees', () => {
-  let navigate
-  let dispatch
 
+describe('unit tests', ()=>{
   beforeEach(()=>{
-    navigate = jest.fn()
-    useNavigate.mockReturnValue(navigate)
-    dispatch = jest.fn()
-    useDispatch.mockReturnValue(dispatch)
-
     useSelector.mockReturnValue({
       success: false,
       successMessage: null,
       erreurMessage: null,
     })
+
     render(<AddEmployees/>)
   })
   afterEach(()=>{
@@ -56,6 +51,29 @@ describe('Test de la page AddEmployees', () => {
     await userEvent.upload(screen.getByTestId(/file-input/i), fichier)
     expect(screen.getByTestId(/file-label/i)).toHaveTextContent('test.xlsx')
   })
+})
+
+describe('Test de la page AddEmployees', () => {
+  let navigate
+  let dispatch
+
+  beforeEach(()=>{
+    navigate = jest.fn()
+    useNavigate.mockReturnValue(navigate)
+    dispatch = jest.fn()
+    useDispatch.mockReturnValue(dispatch)
+
+    useSelector.mockReturnValue({
+      success: false,
+      successMessage: null,
+      erreurMessage: null,
+    })
+    render(<AddEmployees/>)
+  })
+  afterEach(()=>{
+    jest.clearAllMocks()
+    cleanup()
+  })
   test('L\'ajout de fichier et l\'envoi au slice avec succès', async () => {
     const fichier = new File(['file'], 'test.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
     await userEvent.upload(screen.getByTestId(/file-input/i), fichier)
@@ -66,7 +84,7 @@ describe('Test de la page AddEmployees', () => {
     
     await waitFor(() => { 
       expect(dispatch).toHaveBeenCalledTimes(1)
-      expect(dispatch).toHaveBeenCalledWith(addEmployees(expect.anything()))
+      expect(dispatch).toHaveBeenCalledWith(addEmployees(data))
     })
     //rerender la page pour tester les message afficher 
     useSelector.mockReturnValue({
@@ -79,8 +97,6 @@ describe('Test de la page AddEmployees', () => {
     expect(await screen.findByText("Les employés sont ajoutés")).toBeInTheDocument()
     expect(navigate).toHaveBeenCalledTimes(1)
     expect(navigate).toHaveBeenCalledWith("/affiche")
-    
-    
   })
 
   test('L\'ajout de fichier et l\'envoi au slice avec erreur', async ()=>{
@@ -103,6 +119,5 @@ describe('Test de la page AddEmployees', () => {
 
     expect(await screen.findByText('Erreur lors d\'ajout du fichier')).toBeInTheDocument()
     expect(navigate).not.toHaveBeenCalled()
-  
   })
 })

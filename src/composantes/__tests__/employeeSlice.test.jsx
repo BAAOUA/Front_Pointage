@@ -1,15 +1,58 @@
-import { clearMessages, fetchEmployees, addEmployees } from '../../store/employeeSlice'
+import employeeReducer, { clearMessages, fetchEmployees, addEmployees } from '../../store/employeeSlice'
 import { GET, POST } from '../../services/APIService'
-//import store from '../../store/store'
-
-import employeeReducer from '../../store/employeeSlice'
 import { configureStore } from '@reduxjs/toolkit'
+
+
+describe('employeeSlice Reducers', () => {
+  const initialState = {
+    dbEmployees:[],
+    employees:[],
+    erreurMessage: null,
+    successMessage : null,
+    success : false
+  }
+  test('clearMessages', () => {
+    const state = {
+      erreurMessage: 'un erreur',
+      successMessage: 'un messsage',
+      dbEmployees: [],
+      employees: [],
+      success: false,
+    }
+    const nextState = employeeReducer(state, clearMessages())
+
+    expect(nextState.erreurMessage).toBeNull()
+    expect(nextState.successMessage).toBeNull()
+  })
+  test('fetchEmployees', async () => {
+    const response = {
+      success: true,
+      data: [
+        { id: 1, nom: 'baaoua', prenom: 'brahim' },
+      ],
+    }
+    const state = await employeeReducer(initialState, fetchEmployees.fulfilled(response))
+    expect(state.dbEmployees).toEqual(response.data)
+    expect(state.erreurMessage).toBeNull()
+    expect(state.successMessage).toBeNull()
+  })
+  test('AddEmployees', async () => {
+    const response = {
+      success: false,
+      message: "message d'erreur"
+    }
+    const state = await employeeReducer(initialState, addEmployees.fulfilled(response))
+    expect(state.success).toBeFalsy()
+    expect(state.erreurMessage).toEqual(response.message)
+    expect(state.successMessage).toBeNull()
+  })
+})
+
 
 jest.mock('../../Services/APIService',()=>({
   POST: jest.fn(),
   GET: jest.fn()
 }))
-
 
 describe('Test employeeSlice', ()=>{
   let store

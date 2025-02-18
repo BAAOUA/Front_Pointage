@@ -1,3 +1,4 @@
+import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { fetchEmployees, clearMessages } from "../store/employeeSlice"
@@ -43,7 +44,6 @@ export default function ListEmployees(){
         <h3>Liste des employées</h3>
         <input style={{width:"300px"}} className="input-text" type="date" id="search"
           onChange={(e)=>onDateChange(e)}
-          placeholder="Votre nom d'utilisateur"
         />
       </div>
       <div className="row">

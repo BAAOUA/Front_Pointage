@@ -10,7 +10,7 @@ export default function ProtectedRoute({children}){
   //console.log("token   ", accessToken)
   useEffect(()=>{
     if(accessToken == null){
-      localStorage.setItem('redirectTo', location.pathname);
+      localStorage.setItem('redirectTo', location.pathname)
       navigate("/login")
     }
   },[accessToken, navigate, location.pathname])

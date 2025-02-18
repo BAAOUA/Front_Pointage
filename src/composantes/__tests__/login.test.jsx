@@ -4,16 +4,44 @@ import { POST } from '../../services/APIService'
 import { useNavigate } from 'react-router-dom'
 import Login from '../Login'
 
-import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 
+
+describe('Unit tests', ()=>{
+  beforeEach(()=>{
+    render(<Login/>)
+  })
+  afterEach(()=>{
+    cleanup()
+  })
+  test('Chargement de la page', () => {
+    expect(screen.getByLabelText(/Non d'utilisateur/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Mot de passe/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Se connecter/i })).toBeInTheDocument()
+  })
+  test('Formulaire vide', async ()=>{
+    userEvent.click(screen.getByRole('button', {name: /Se connecter/i}))
+
+    expect(await screen.findByText("Vous devez saissir votre nom d'utilisateur")).toBeInTheDocument()
+    expect(await screen.findByText('Vous devez saissir votre mot de passe')).toBeInTheDocument()
+  })
+  test('Erreurs de validation', async ()=>{
+    await userEvent.type(screen.getByLabelText(/Mot de passe/i), 'pa')
+    
+    userEvent.click(screen.getByRole('button', {name: /Se connecter/i}))
+
+    expect(await screen.findByText('Vous devez saissir votre nom d\'utilisateur')).toBeInTheDocument()
+    expect(await screen.findByText('Votre mot de passe est plus court')).toBeInTheDocument()
+  })
+})
 
 jest.mock('../../Services/APIService', () => ({
   POST: jest.fn(),
-}));
+}))
 
 jest.mock('react-router-dom', () => ({
   useNavigate: jest.fn(),
-}));
+}))
 
 describe('Test de la page de login', () => {
   let navigate
@@ -37,25 +65,6 @@ describe('Test de la page de login', () => {
     cleanup()
   })
 
-  test('Chargement de la page', () => {
-    expect(screen.getByLabelText(/Non d'utilisateur/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Mot de passe/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Se connecter/i })).toBeInTheDocument()
-  });
-  test('Formulaire vide', async ()=>{
-    userEvent.click(screen.getByRole('button', {name: /Se connecter/i}))
-
-    expect(await screen.findByText("Vous devez saissir votre nom d'utilisateur")).toBeInTheDocument()
-    expect(await screen.findByText('Vous devez saissir votre mot de passe')).toBeInTheDocument()
-  })
-  test('Erreurs de validation', async ()=>{
-    await userEvent.type(screen.getByLabelText(/Mot de passe/i), 'pa')
-    
-    userEvent.click(screen.getByRole('button', {name: /Se connecter/i}))
-
-    expect(await screen.findByText('Vous devez saissir votre nom d\'utilisateur')).toBeInTheDocument()
-    expect(await screen.findByText('Votre mot de passe est plus court')).toBeInTheDocument()
-  })
   test('Appel du fonction onSubmet() avec message d\'erreur', async ()=>{
     POST.mockResolvedValueOnce({success:false, message: "erreur"})
 
@@ -89,4 +98,4 @@ describe('Test de la page de login', () => {
     })
   })
   
-});
+})
