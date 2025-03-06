@@ -4,6 +4,7 @@ import { POST } from "../services/APIService"
 import { useNavigate } from "react-router-dom"
 import { loginThunk } from "../thunk/authThunk"
 import { useDispatch, useSelector } from "react-redux"
+import { login } from "../store/authSlice"
 
 export default function Login(){
   const navigate = useNavigate()
@@ -11,17 +12,14 @@ export default function Login(){
   const {register, handleSubmit, formState: {errors}} = useForm()
   const erreur = useSelector((state)=> state.employee.erreurMessage)
   const onSubmit = async (data)=>{
-    dispatch(loginThunk(data, navigate))
-    /*
-    const response = await POST("/auth/login", data)
-    if(response.success){
-      localStorage.setItem("accessToken", response.data.accessToken)
-      localStorage.setItem("refreshToken", response.data.refreshToken)
-      const url = localStorage.getItem('redirectTo') == null? "/affiche": localStorage.getItem('redirectTo')
-      navigate(url)
-    } else {
-      alert(response.message)
-    }*/
+    //dispatch(loginThunk(data, navigate))
+    dispatch(login(data)).unwrap()
+    .then(() => {
+      navigate('/affiche');
+    })
+    .catch((error) => {
+      alert("Une erreur s'est produite lors de la déconnexion.");
+    });
   }
 
   return(

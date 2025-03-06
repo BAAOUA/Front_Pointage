@@ -12,6 +12,7 @@ import store, {persistor} from './store/store'
 import ProtectedRoute from './services/ProtectedRoute'
 import Error from './composantes/ServerError'
 import { PersistGate } from 'redux-persist/integration/react'
+import { history } from './thunk/Services'
 
 const route = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={route}/>
+        <RouterProvider router={route} history={history}/>
       </PersistGate>
     </Provider>
   )

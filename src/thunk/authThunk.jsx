@@ -3,6 +3,11 @@ import { addUser, deleteUser } from "../store/authSlice";
 import { POST } from "../services/APIService";
 
 
+export const navigateTo = (url) => ({
+  type: 'navigate',
+  payload: url,
+})
+
 export const loginThunk = (loginInfo, navigate)=> async (dispatch)=>{
   const response = await POST("/auth/login", loginInfo)
   if(response.success){
@@ -18,11 +23,11 @@ export const loginThunk = (loginInfo, navigate)=> async (dispatch)=>{
     alert(response.message)
   }
 }
-export const logoutThunk = (navigate)=> async (dispatch)=>{
+export const logoutThunk = ()=> async (dispatch)=>{
   const response = await POST("/auth/logout")
     if(response.success){
       dispatch(deleteUser())
-      navigate("/login")
+      //navigate("/login")
     } else {
       alert("Une erreur s'est produite lors de la déconnexion.")
     }
